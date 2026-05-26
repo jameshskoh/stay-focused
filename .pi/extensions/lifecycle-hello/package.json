@@ -1,0 +1,9 @@
+{
+  "name": "lifecycle-hello",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "pi": {
+    "extensions": ["./index.ts"]
+  }
+}

@@ -1,0 +1,7 @@
+tasks:
+  - id: 1
+    name: create AGENTS.md
+    status: DONE
+    instructions:
+      - Create an AGENTS.md file at the root.
+      - Copy content of README.md into AGENTS.md.
