@@ -5,7 +5,7 @@
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "vitest": "^2.0.0",
+    "vitest": "^4.1.7",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.0.0",
     "@earendil-works/pi-coding-agent": "0.75.5",
