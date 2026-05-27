@@ -1,0 +1,19 @@
+{
+  "name": "stay-focused",
+  "type": "module",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.0.0",
+    "@earendil-works/pi-coding-agent": "0.75.5"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "pi": {
+    "extensions": ["./index.ts"]
+  }
+}
