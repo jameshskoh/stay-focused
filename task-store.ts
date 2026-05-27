@@ -14,13 +14,18 @@ function tasksPath(cwd: string): string {
   return path.join(cwd, "tasks", "tasks.yaml");
 }
 
+interface TasksFile {
+  tasks: Task[];
+}
+
 function readTasks(cwd: string): Task[] {
   const raw = fs.readFileSync(tasksPath(cwd), "utf8");
-  return yaml.load(raw) as Task[];
+  const parsed = yaml.load(raw) as TasksFile;
+  return parsed.tasks;
 }
 
 function writeTasks(cwd: string, tasks: Task[]): void {
-  fs.writeFileSync(tasksPath(cwd), yaml.dump(tasks), "utf8");
+  fs.writeFileSync(tasksPath(cwd), yaml.dump({ tasks }), "utf8");
 }
 
 export function findFirstPending(cwd: string): Task | null {

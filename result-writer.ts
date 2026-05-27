@@ -32,7 +32,7 @@ export function processResult(
 
 function parseFrontmatterStatus(text: string): "done" | "failed" {
   if (!text.startsWith("---")) return "failed";
-  const end = text.indexOf("\n---", 3);
+  const end = text.indexOf("\n---\n", 3);
   if (end === -1) return "failed";
   const frontmatter = text.slice(3, end).trim();
   try {

@@ -81,4 +81,16 @@ describe("processResult", () => {
     expect(result).toBe("failed");
     expect(fs.readFileSync(path.join(taskDir, "RESULT.md"), "utf8")).toBe("");
   });
+
+  it("returns 'failed' when assistant message has empty text content; RESULT.md written as empty file", () => {
+    const messages: AgentMessage[] = [
+      userMessage("go"),
+      assistantMessage(""),
+    ];
+
+    const result = processResult(taskDir, messages);
+
+    expect(result).toBe("failed");
+    expect(fs.readFileSync(path.join(taskDir, "RESULT.md"), "utf8")).toBe("");
+  });
 });

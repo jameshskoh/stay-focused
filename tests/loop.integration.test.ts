@@ -56,9 +56,9 @@ function createSpyUIContext() {
   };
 }
 
-function seedTasksYaml(dir: string, tasks: Task[]): void {
+function seedTasksYaml(dir: string, content: string): void {
   fs.mkdirSync(path.join(dir, "tasks"), { recursive: true });
-  fs.writeFileSync(path.join(dir, "tasks", "tasks.yaml"), yaml.dump(tasks), "utf8");
+  fs.writeFileSync(path.join(dir, "tasks", "tasks.yaml"), content, "utf8");
 }
 
 function seedContextMd(taskDir: string, content: string): void {
@@ -68,7 +68,7 @@ function seedContextMd(taskDir: string, content: string): void {
 
 function readTasksYaml(dir: string): Task[] {
   const raw = fs.readFileSync(path.join(dir, "tasks", "tasks.yaml"), "utf8");
-  return yaml.load(raw) as Task[];
+  return (yaml.load(raw) as { tasks: Task[] }).tasks;
 }
 
 async function waitFor(
@@ -144,7 +144,12 @@ describe("stay-focused integration", () => {
   }
 
   it("happy path: single task, DONE", async () => {
-    seedTasksYaml(tempDir, [{ id: "001", name: "alpha", status: "pending" }]);
+    seedTasksYaml(tempDir, `\
+tasks:
+  - id: "001"
+    name: alpha
+    status: pending
+`);
     seedContextMd(path.join(tempDir, "tasks", "001_alpha"), "Do the alpha task.");
 
     faux.setResponses([
@@ -185,10 +190,15 @@ describe("stay-focused integration", () => {
   });
 
   it("happy path: two tasks in sequence", async () => {
-    seedTasksYaml(tempDir, [
-      { id: "001", name: "alpha", status: "pending" },
-      { id: "002", name: "beta", status: "pending" },
-    ]);
+    seedTasksYaml(tempDir, `\
+tasks:
+  - id: "001"
+    name: alpha
+    status: pending
+  - id: "002"
+    name: beta
+    status: pending
+`);
     seedContextMd(path.join(tempDir, "tasks", "001_alpha"), "Do the alpha task.");
     seedContextMd(path.join(tempDir, "tasks", "002_beta"), "Do the beta task.");
 
@@ -231,10 +241,15 @@ describe("stay-focused integration", () => {
   });
 
   it("no pending tasks on first message", async () => {
-    seedTasksYaml(tempDir, [
-      { id: "001", name: "alpha", status: "done" },
-      { id: "002", name: "beta", status: "done" },
-    ]);
+    seedTasksYaml(tempDir, `\
+tasks:
+  - id: "001"
+    name: alpha
+    status: done
+  - id: "002"
+    name: beta
+    status: done
+`);
 
     faux.setResponses([
       fauxAssistantMessage("Hello! I am ready to start a fresh session. Please begin when you are ready."),
@@ -266,7 +281,12 @@ describe("stay-focused integration", () => {
   });
 
   it("failure: status FAILED frontmatter", async () => {
-    seedTasksYaml(tempDir, [{ id: "001", name: "alpha", status: "pending" }]);
+    seedTasksYaml(tempDir, `\
+tasks:
+  - id: "001"
+    name: alpha
+    status: pending
+`);
     seedContextMd(path.join(tempDir, "tasks", "001_alpha"), "Do the alpha task.");
 
     faux.setResponses([
@@ -306,7 +326,12 @@ describe("stay-focused integration", () => {
   });
 
   it("failure: missing frontmatter", async () => {
-    seedTasksYaml(tempDir, [{ id: "001", name: "alpha", status: "pending" }]);
+    seedTasksYaml(tempDir, `\
+tasks:
+  - id: "001"
+    name: alpha
+    status: pending
+`);
     seedContextMd(path.join(tempDir, "tasks", "001_alpha"), "Do the alpha task.");
 
     faux.setResponses([
@@ -343,7 +368,12 @@ describe("stay-focused integration", () => {
     const initialPrompt =
       "Hello! I am ready to start a fresh session. Please begin when you are ready.";
 
-    seedTasksYaml(tempDir, [{ id: "001", name: "alpha", status: "pending" }]);
+    seedTasksYaml(tempDir, `\
+tasks:
+  - id: "001"
+    name: alpha
+    status: pending
+`);
     seedContextMd(path.join(tempDir, "tasks", "001_alpha"), "Do the alpha task.");
 
     faux.setResponses([
