@@ -28,6 +28,11 @@ export function findFirstPending(cwd: string): Task | null {
   return tasks.find((t) => t.status === "pending") ?? null;
 }
 
+export function findInProgress(cwd: string): Task | null {
+  const tasks = readTasks(cwd);
+  return tasks.find((t) => t.status === "in_progress") ?? null;
+}
+
 function markStatus(cwd: string, id: string, status: TaskStatus): void {
   const tasks = readTasks(cwd);
   const task = tasks.find((t) => t.id === id);

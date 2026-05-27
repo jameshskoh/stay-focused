@@ -5,6 +5,7 @@ import * as yaml from "js-yaml";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
   findFirstPending,
+  findInProgress,
   markInProgress,
   markDone,
   markFailed,
@@ -48,6 +49,25 @@ describe("findFirstPending", () => {
       { id: "002", name: "beta", status: "failed" },
     ]);
     expect(findFirstPending(tmpDir)).toBeNull();
+  });
+});
+
+describe("findInProgress", () => {
+  it("returns the in_progress task when one exists", () => {
+    seedTasksYaml(tmpDir, [
+      { id: "001", name: "alpha", status: "done" },
+      { id: "002", name: "beta", status: "in_progress" },
+      { id: "003", name: "gamma", status: "pending" },
+    ]);
+    expect(findInProgress(tmpDir)).toEqual({ id: "002", name: "beta", status: "in_progress" });
+  });
+
+  it("returns null when no task is in_progress", () => {
+    seedTasksYaml(tmpDir, [
+      { id: "001", name: "alpha", status: "done" },
+      { id: "002", name: "beta", status: "pending" },
+    ]);
+    expect(findInProgress(tmpDir)).toBeNull();
   });
 });
 
