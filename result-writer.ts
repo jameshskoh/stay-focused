@@ -32,8 +32,15 @@ export function processResult(
 
 function parseFrontmatterStatus(text: string): "done" | "failed" {
   if (!text.startsWith("---")) return "failed";
-  const end = text.indexOf("\n---\n", 3);
-  if (end === -1) return "failed";
+  let end = text.indexOf("\n---\n", 3);
+  if (end === -1) {
+    // closing --- may be the last line with no trailing newline
+    if (text.endsWith("\n---")) {
+      end = text.length - 4;
+    } else {
+      return "failed";
+    }
+  }
   const frontmatter = text.slice(3, end).trim();
   try {
     const parsed = yaml.load(frontmatter) as { status?: string };
